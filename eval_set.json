@@ -1,0 +1,35 @@
+{
+  "_说明": "个人知识库问答系统评测集：每题均基于 docs/ 笔记中真实存在的内容出题，用于评估检索+生成质量",
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Kafka分区副本消费组.md",
+      "question": "Kafka 中 ISR 是什么？Leader 和 Follower 是如何工作的？",
+      "answer_keywords": ["ISR", "Leader", "Follower", "同步"]
+    },
+    {
+      "id": 2,
+      "topic": "ZooKeeper集群配置.md",
+      "question": "ZooKeeper 三节点集群配置了哪些关键参数？集群配置文件中 server 条目怎么写？",
+      "answer_keywords": ["server", "2888", "3888", "myid"]
+    },
+    {
+      "id": 3,
+      "topic": "Hadoop环境搭建与MapReduce.md",
+      "question": "Hadoop 的 NameNode 和 DataNode 各自负责什么？",
+      "answer_keywords": ["NameNode", "元数据", "DataNode", "存储"]
+    },
+    {
+      "id": 4,
+      "topic": "Flink集群部署.md",
+      "question": "Flink 集群包含哪些核心组件？各自职责是什么？",
+      "answer_keywords": ["JobManager", "TaskManager", "调度", "任务"]
+    },
+    {
+      "id": 5,
+      "topic": "SparkSQL总结.md",
+      "question": "Spark SQL 的 DataFrame 是什么？相比 RDD 有什么优势？",
+      "answer_keywords": ["DataFrame", "RDD", "优化", "Schema"]
+    }
+  ]
+}

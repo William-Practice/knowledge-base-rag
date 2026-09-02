@@ -1,0 +1,13 @@
+# API Key（勿提交）
+.env
+
+# 向量库（构建产物，勿提交）
+kb_store/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 系统
+.DS_Store
