@@ -62,6 +62,8 @@ class RAGConfig:
     rerank_model: str = "rerank-pro"
     llm_model: str = "glm-4v-flash"
     temperature: float = 0.3
+    # off / plain / protected / strict —— 实测 plain 是负收益，见 AGENTS.md §8.2
+    rewrite_mode: str = "plain"
     # —— 路径 ——
     kb_name: str = "personal_notes"
     docs_dir: str = os.path.join(_HERE, "docs")

@@ -43,7 +43,9 @@ def main():
     add_config_args(ap)
     ap.add_argument("--eval-set", default=os.path.join(_HERE, "eval_set_v2.json"))
     ap.add_argument("--no-rerank", action="store_true")
-    ap.add_argument("--no-rewrite", action="store_true")
+    ap.add_argument("--no-rewrite", action="store_true", help="等价 --rewrite-mode off")
+    ap.add_argument("--rewrite-mode", default=None,
+                    choices=["off", "plain", "protected", "strict"])
     ap.add_argument("--top-n", type=int, default=None, help="最终保留条数（默认取 cfg.rerank_top_n）")
     ap.add_argument("--tag", default="baseline")
     ap.add_argument("--out-dir", default=os.path.join(_HERE, "results"))
@@ -51,10 +53,11 @@ def main():
 
     cfg = config_from_args(args)
     top_n = args.top_n if args.top_n is not None else cfg.rerank_top_n
+    rw_mode = "off" if args.no_rewrite else (args.rewrite_mode or cfg.rewrite_mode)
 
     from loader import build_index
     from retriever import search, _rerank
-    from generator import rewrite_query
+    from generator import rewrite_query, missing_terms
     from embedding_utils import embed, cosine_similarity
 
     kb = build_index(cfg, verbose=False)
@@ -68,7 +71,7 @@ def main():
 
     print(f"配置 tag={args.tag}  chunk={cfg.chunk_size} recall_k={cfg.recall_k} "
           f"top_n={top_n} rerank={'off' if args.no_rerank else 'on'} "
-          f"rewrite={'off' if args.no_rewrite else 'on'}")
+          f"rewrite={rw_mode}")
     print(f"索引 {len(chunks)} 块 / 题目 {len(qs)} 道\n")
 
     rows, lat = [], {"rewrite": [], "embed": [], "scan": [], "rerank": [], "total": []}
@@ -77,7 +80,8 @@ def main():
         t0 = time.perf_counter()
 
         t = time.perf_counter()
-        query = q["question"] if args.no_rewrite else rewrite_query(q["question"], cfg=cfg)
+        query = rewrite_query(q["question"], cfg=cfg, mode=rw_mode) if rw_mode != "off" else q["question"]
+        lost = missing_terms(q["question"], query) if rw_mode != "off" else []
         lat["rewrite"].append(time.perf_counter() - t)
 
         t = time.perf_counter()
@@ -118,7 +122,7 @@ def main():
         rows.append({
             "id": q["id"], "category": q["category"], "question": q["question"],
             "n_gold": len(gold), "hit@10": int(hit10), "hit@topn": int(hit_n),
-            "rr": round(rr, 4), "rerank_applied": int(applied),
+            "rr": round(rr, 4), "rerank_applied": int(applied), "n_lost_terms": len(lost),
             "gold_ids": "|".join(map(str, sorted(gold))),
             "top_ids": "|".join(map(str, fin_ids[:top_n])),
         })
@@ -140,6 +144,8 @@ def main():
         print(f"  {cat:<12} n={len(rs):<3} hit@10={sum(x['hit@10'] for x in rs)/len(rs):.3f}"
               f"  hit@{top_n}={sum(x['hit@topn'] for x in rs)/len(rs):.3f}"
               f"  MRR={sum(x['rr'] for x in rs)/len(rs):.3f}")
+    lost_total = sum(r["n_lost_terms"] for r in rows)
+    print(f"  改写丢失受保护词：{lost_total} 次")
     if not args.no_rerank:
         applied = sum(r["rerank_applied"] for r in rows)
         print(f"  rerank 实际生效：{applied}/{n}" + ("  ⚠ 有未生效的题" if applied < n else ""))

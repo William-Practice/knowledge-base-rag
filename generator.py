@@ -4,11 +4,28 @@ generator.py — ④ 生成层：Query 重写 + 拼 Prompt + GLM 生成（答案
 """
 
 import json
+import re
 import urllib.request
+import warnings
 
 from config import *                      # LLM_BASE_URL / LLM_API_KEY
 from config import DEFAULT_CONFIG, RAGConfig
 from retriever import search
+
+# 改写时必须原样保留的"技术记号"：英文单词 / 文件名 / 配置键 / 命令行参数。
+# 中文问题里出现的 ASCII token 几乎都是实体（Kafka、ISR、mapred-site.xml、--to-earliest），
+# 而实测 plain rewrite 恰恰会动它们：mapred-site.xml → mapreduce-site.xml。
+_PROTECTED = re.compile(r"[A-Za-z][A-Za-z0-9_.\-]{1,}")
+
+
+def protected_terms(question: str) -> list[str]:
+    return sorted({m.group(0) for m in _PROTECTED.finditer(question)})
+
+
+def missing_terms(question: str, rewritten: str) -> list[str]:
+    """改写后没能保留下来的受保护词（大小写不敏感）"""
+    low = rewritten.lower()
+    return [t for t in protected_terms(question) if t.lower() not in low]
 
 
 def _glm_chat(prompt: str, temperature: float | None = None, model: str | None = None,
@@ -33,14 +50,47 @@ def _glm_chat(prompt: str, temperature: float | None = None, model: str | None =
     return data["choices"][0]["message"]["content"].strip()
 
 
-def rewrite_query(question: str, cfg: RAGConfig = DEFAULT_CONFIG) -> str:
-    """把口语问题改写成适合文档检索的书面问题（补全代词、规范表述）"""
+def rewrite_query(question: str, cfg: RAGConfig = DEFAULT_CONFIG,
+                  mode: str | None = None) -> str:
+    """
+    把口语问题改写成书面问题。四种模式（实测结论见 AGENTS.md §8.2）：
+
+      off       直接返回原问题（不调 LLM，结果确定）
+      plain     原实现：纯 LLM 改写。**实测是负收益**——会改坏文件名和实体
+      protected 改写 + 把丢失的受保护词补回查询末尾
+      strict    改写结果只要丢了任一受保护词，就整体作废退回原问题
+    """
+    mode = (mode or getattr(cfg, "rewrite_mode", "plain")).lower()
+    if mode == "off":
+        return question
+
+    terms = protected_terms(question)
+    # 只有 protected / strict 才加守卫。plain 保持原实现（无守卫），
+    # 否则它也会被顺带修好，历史数字就不可比了 —— 实测正是如此。
+    guard = ""
+    if mode in ("protected", "strict") and terms:
+        guard = "\n必须原样保留下列术语，不许翻译、改写、纠错、补全：" + "、".join(terms)
     prompt = f"""把下面口语问题改写成适合文档检索的清晰问题。
-要求：补全代词、改书面语、保留原意，只输出改写后的问题，不要其他内容。
+要求：补全代词、改书面语、保留原意，只输出改写后的问题，不要其他内容。{guard}
 
 问题：{question}
 改写："""
-    return _glm_chat(prompt, temperature=0.1, cfg=cfg)
+    out = _glm_chat(prompt, temperature=0.1, cfg=cfg)
+
+    if mode == "plain":
+        return out
+
+    lost = missing_terms(question, out)
+    if mode == "protected":
+        return out if not lost else f"{out} {' '.join(lost)}"
+
+    if mode == "strict":
+        if lost:
+            warnings.warn(f"改写丢失受保护词 {lost}，退回原问题", RuntimeWarning, stacklevel=2)
+            return question
+        return out
+
+    raise ValueError(f"未知 rewrite_mode: {mode}（可选 off/plain/protected/strict）")
 
 
 def answer(query: str, docs: list[dict],
