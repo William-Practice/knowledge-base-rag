@@ -1,10 +1,11 @@
 # HARNESS.MD — 本项目通用 harness 入口（不自动读 AGENTS.md 的平台）
 
-> **唯一事实源：本目录的 `AGENTS.md`**。本文件是入口副本，给 DeepSeek harness、Cursor、
+> **公开事实源：本目录的 `README.md`**。本文件是入口副本，给 DeepSeek harness、Cursor、
 > 自研 harness 等"给一段提示词就开始干活"的平台用。
+> （本地工作副本可能另有 `AGENTS.md`，不随仓库分发；若存在则一并读。）
 >
 > **用法**：首次提示的第一行写 ——
-> `先读 ./HARNESS.MD 和 ./AGENTS.md，不要重新调查现状。`
+> `先读 ./HARNESS.MD 和 ./README.md，不要重新调查现状。`
 
 ---
 
@@ -51,8 +52,8 @@ R8  失败就是失败，不要美化
 
 先读这些文件了解背景，**不要重新调查**：
   ./HARNESS.MD
-  ./AGENTS.md
-  README.md
+  ./README.md
+  eval/results/summary.csv
 
 关键约束：
   · 本目录是 PUBLIC 仓库，语料与个人信息不得入库
@@ -70,7 +71,7 @@ R8  失败就是失败，不要美化
 三层缺任何一层的症状：
 
 ```
-缺指路      重新调查一遍，结论与 README/AGENTS.md 矛盾，白烧额度
+缺指路      重新调查一遍，结论与 README 矛盾，白烧额度
 缺不做清单  自作主张（换框架、重建索引、改评测集）
 缺验收      宣布"已完成"，实际没验证 —— 自述 ≠ 事实
 ```

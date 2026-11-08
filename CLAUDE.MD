@@ -1,10 +1,10 @@
 # CLAUDE.MD — 本项目的 agent 入口（Claude Code 侧）
 
-> **唯一事实源：本目录的 `AGENTS.md`**。本文件是入口副本；冲突时以 `AGENTS.md` 为准。
+> **公开事实源：本目录的 `README.md`**。本文件是入口副本；冲突时以 `README.md` 与
+> `eval/results/summary.csv` 为准。（本地工作副本可能另有 `AGENTS.md`，不随仓库分发。）
 >
-> **文件名注意**：Claude Code 只认小写 `.md` —— `./CLAUDE.md` 与 `~/.claude/CLAUDE.md`。
-> 本目录的 `CLAUDE.md` 已软链到 `AGENTS.md`（内容更全，优先读那个）；
-> 本文件按约定用大写后缀 `.MD`，供明确指名读取它的场景使用。
+> **文件名注意**：Claude Code 只认小写 `.md` —— 本目录的 `CLAUDE.md` 是指向本文件的软链，
+> 所以它会正常加载；`CLAUDE.MD` 这个大写后缀是给人看的规范名。
 
 ---
 
@@ -40,7 +40,7 @@ R8  失败就是失败，不要美化
 ## 3. Claude Code 专有提醒
 
 ```
-· 它会自动读 ./CLAUDE.md（已软链到 AGENTS.md）与 ~/.claude/CLAUDE.md
+· 它会自动读 ./CLAUDE.md（本仓库里是指向 CLAUDE.MD 的软链）与 ~/.claude/CLAUDE.md
 · 默认会对每条命令请求审批；批量改动前先说清"只做什么、不要做什么"
 · 改完必须让它贴 `python tests/*.py` 的原始输出，不能接受"测试通过"
 · 长任务交给它时，把 eval 命令写进简报：改了检索逻辑就要重跑 60 题并对照 summary.csv
