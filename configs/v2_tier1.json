@@ -1,0 +1,9 @@
+{
+  "_comment": "档 1：notes 技术类 31 篇的冻结快照。用 --config configs/v2_tier1.json 选择。",
+  "docs_dir": "/data/Projects/GLMModelsDemo/knowledge_base/kb_corpus",
+  "kb_name": "notes_v2",
+  "chunk_size": 500,
+  "chunk_overlap": 50,
+  "recall_k": 10,
+  "rerank_top_n": 3
+}

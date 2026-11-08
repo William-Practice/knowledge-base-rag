@@ -89,6 +89,7 @@ class RAGConfig:
 
     @classmethod
     def from_dict(cls, d: dict) -> "RAGConfig":
+        d = {k: v for k, v in d.items() if not k.startswith("_")}  # 允许 _comment 之类注释键
         known = {f.name for f in fields(cls)}
         unknown = set(d) - known
         if unknown:

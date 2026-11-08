@@ -11,3 +11,6 @@ __pycache__/
 
 # 系统
 .DS_Store
+kb_corpus/
+eval/results/
+*.log

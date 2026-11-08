@@ -32,8 +32,11 @@ STORE_FORMAT = 2
 # ── 加载 ────────────────────────────────────────────────
 
 def list_doc_paths(docs_dir: str) -> list[str]:
-    return sorted(glob.glob(os.path.join(docs_dir, "*.md")) +
-                  glob.glob(os.path.join(docs_dir, "*.txt")))
+    """递归收集 md/txt（支持 kb_corpus/kafka/*.md 这类子目录结构）"""
+    paths = []
+    for ext in ("*.md", "*.txt"):
+        paths += glob.glob(os.path.join(docs_dir, "**", ext), recursive=True)
+    return sorted(paths)
 
 
 def load_files(docs_dir: str = DEFAULT_CONFIG.docs_dir) -> list[dict]:
@@ -49,7 +52,8 @@ def load_files(docs_dir: str = DEFAULT_CONFIG.docs_dir) -> list[dict]:
         if not text.strip():
             continue
         docs.append({
-            "source": os.path.basename(f),
+            # 相对 docs_dir 的路径，子目录保留（kafka/xxx.md）；平铺语料仍是纯文件名
+            "source": os.path.relpath(f, docs_dir).replace(os.sep, "/"),
             "path": f,
             "text": text,
             "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),

@@ -1,0 +1,203 @@
+{
+  "frozen_at": "2026-11-08 12:16:53",
+  "source_root": "~/notes",
+  "dirs": [
+    "kafka",
+    "flink",
+    "llm-dev",
+    "hadoop",
+    "spark",
+    "zookeeper"
+  ],
+  "excluded": [
+    "other",
+    "project"
+  ],
+  "totals": {
+    "files": 31,
+    "chars": 167966
+  },
+  "per_dir": {
+    "kafka": {
+      "files": 12,
+      "chars": 56231
+    },
+    "flink": {
+      "files": 6,
+      "chars": 35727
+    },
+    "llm-dev": {
+      "files": 4,
+      "chars": 28217
+    },
+    "hadoop": {
+      "files": 4,
+      "chars": 28518
+    },
+    "spark": {
+      "files": 4,
+      "chars": 16055
+    },
+    "zookeeper": {
+      "files": 1,
+      "chars": 3218
+    }
+  },
+  "files": [
+    {
+      "path": "kafka/Kafka-Redis偏移量存储总结.md",
+      "sha256": "cd2478c6ae89c7cf30afe8dafd0a6b306edc5d762c5be37d6fabcd797f05dccc",
+      "chars": 6025
+    },
+    {
+      "path": "kafka/Kafka运维排查-日志目录与协调器.md",
+      "sha256": "6859202ebeabb5b92e4c49276f2c665d13c17e365c35282fe90e11dc454dedc9",
+      "chars": 4094
+    },
+    {
+      "path": "kafka/L16-Kafka深入-分区开发总结.md",
+      "sha256": "59d3798cc19353cc032ae1a8ec4ad66ca6bbdf2bd6ec905b7327ed1efb85e0ee",
+      "chars": 6628
+    },
+    {
+      "path": "kafka/L17-Kafka消费者组偏移量管理总结.md",
+      "sha256": "25091d256cf96b0f91b017697073384dc388a39403d66a905e7c51130478b996",
+      "chars": 3985
+    },
+    {
+      "path": "kafka/L19-Kafka分区+副本+消费组总结.md",
+      "sha256": "6c559b065cafb3f62ab9305d63b05eeab0fc5436f1bb47a2a9c6c39f741ced7c",
+      "chars": 3242
+    },
+    {
+      "path": "kafka/L20-Kafka-Consumer+多线程+Lag总结.md",
+      "sha256": "492d8ed01588f8c076a9805f8873c8de8d0488c373817e29d34c76396470d484",
+      "chars": 5601
+    },
+    {
+      "path": "kafka/L21-Kafka-Offset多维度开发总结.md",
+      "sha256": "c0a8550a3f215167caf69fa2958ee00b94409a5bbb76762e637b6d05b52a5032",
+      "chars": 4753
+    },
+    {
+      "path": "kafka/L22-Kafka-性能测试+分区数参数总结.md",
+      "sha256": "d98c7e1cefe9ee639e61fce75e374f68699ca534567940ecb18cf8790b7f502e",
+      "chars": 3916
+    },
+    {
+      "path": "kafka/T15-Kafka-Eagle-EFAK配置总结.md",
+      "sha256": "7ca3fe6a97d0b758cf8bb47296afbd03b90863fccb9fa5edf5dede2e1669caee",
+      "chars": 4097
+    },
+    {
+      "path": "kafka/T16-自定义分区器实验总结.md",
+      "sha256": "bf9d11a25c6b182a3d486b509dee27120b26671942e8e1c900a4d9d62dd1058a",
+      "chars": 10354
+    },
+    {
+      "path": "kafka/bigdata-study-guide.md",
+      "sha256": "7de5266947ad39995a063dfbd7b1a83004441c6496f84e97923f69f20b4dd1e1",
+      "chars": 1261
+    },
+    {
+      "path": "kafka/fix-summary.md",
+      "sha256": "f660efd0e48f855deec5198803d737da55d2b2d787266efc0c067639d52bd116",
+      "chars": 2275
+    },
+    {
+      "path": "flink/L33-Flink集群部署总结.md",
+      "sha256": "e88e7ecdeb022fc30bec1a9293153b93bac9eadb03ad43d30fd3eeff1ce24c0e",
+      "chars": 4070
+    },
+    {
+      "path": "flink/L34-Flink编程模型总结.md",
+      "sha256": "d6049bad4e5bdecfef47278a52e386c61054329289a353f5fc67645a25ac1dc8",
+      "chars": 4339
+    },
+    {
+      "path": "flink/L36-Flink并行度总结.md",
+      "sha256": "f98c6f1c4458b7814ecd4342881225ef4ef8ed6c0c6610d62bf49242632409d3",
+      "chars": 4542
+    },
+    {
+      "path": "flink/L37-Flink开发-Kafka-State-Checkpoint总结.md",
+      "sha256": "e3aa9aed98b25d91caa9fc5f1314cc19118216ed5e835b6d9412c5e1889859de",
+      "chars": 7509
+    },
+    {
+      "path": "flink/L39-Trigger-Watermark总结.md",
+      "sha256": "3b96afacaefdac0efacf041788a7cdda407299bb3da2913e073ed20160e21c85",
+      "chars": 7702
+    },
+    {
+      "path": "flink/L41-L46-Flink-SQL系列总结.md",
+      "sha256": "cd4382e3c357e463237b5f93138876a632beee5282e407cf0905b1194546560f",
+      "chars": 7565
+    },
+    {
+      "path": "llm-dev/D01-D16-大模型基础与RAG总结.md",
+      "sha256": "d8dc51dd151d82d9b270f79f3a5223c883d703ed99a490e7e48920a5db12242d",
+      "chars": 5574
+    },
+    {
+      "path": "llm-dev/D17-D22-Agent与MCP总结.md",
+      "sha256": "1f0775366aabfd9a6544b995aa46b4e4849e5204f7262d485a938cfce0f7af8c",
+      "chars": 11168
+    },
+    {
+      "path": "llm-dev/D23-D27-微调部署与评估总结.md",
+      "sha256": "b653a117995d11042f16dc5e1d16791b1cb1bb1d7efa1903fdeda40175bdadec",
+      "chars": 8711
+    },
+    {
+      "path": "llm-dev/README.md",
+      "sha256": "8466cd48ca4a9d01385abbdf2bdbdc347d61896c6a52c111779ded585d5f7ff5",
+      "chars": 2764
+    },
+    {
+      "path": "hadoop/L01-04-Hadoop环境搭建与MapReduce实战.md",
+      "sha256": "5e5c71e0ac8bc0b6e5a0856363a141934203fbe285f10e6983537487b7c15a79",
+      "chars": 14857
+    },
+    {
+      "path": "hadoop/L05-07-Hive安装与SQL实战.md",
+      "sha256": "9ba1a5c561ab581a7167fe2751af580bfdfb00f6851765f8375243c589e63450",
+      "chars": 6884
+    },
+    {
+      "path": "hadoop/L09-14-Sqoop与Hive分区实战.md",
+      "sha256": "ee334fe589c23f797ecec4b9be356c569a1ee829aa17ac9b7676687f6dee852a",
+      "chars": 3367
+    },
+    {
+      "path": "hadoop/Sqoop环境配置实战Checklist.md",
+      "sha256": "d24e80f15005144fe50ece43bb53fe9cdc4f0810512439a0fc5e5c5add99d17b",
+      "chars": 3410
+    },
+    {
+      "path": "spark/L29-Spark集群部署+打包发布总结.md",
+      "sha256": "0c0f71cd214c16989d993e8338419ad90a0e3e2e82b66eccc6b9821aba5f2703",
+      "chars": 3011
+    },
+    {
+      "path": "spark/L30-Spark-SQL总结.md",
+      "sha256": "0e4fdda77de52b9e7aa040574606de8b18f73d6f8de9d2aa1ef428348a82b9d5",
+      "chars": 3174
+    },
+    {
+      "path": "spark/L31-Spark-SQL-MySQL-Hive总结.md",
+      "sha256": "e3169d54e542c84df007fe78c56903f32946982255cafccf4c880c6505a873bf",
+      "chars": 4672
+    },
+    {
+      "path": "spark/L32-Spark-结构化流+Kafka总结.md",
+      "sha256": "c5734bd2fc114f62999e6c53e0ce3a6ee5124bc4b12888fc465c6ccf65c4af29",
+      "chars": 5198
+    },
+    {
+      "path": "zookeeper/ZooKeeper集群配置总结-三节点.md",
+      "sha256": "387c69461e958ff49e313281fedc5ade4bc9230a390f2d274d0db0079e7a37b7",
+      "chars": 3218
+    }
+  ]
+}

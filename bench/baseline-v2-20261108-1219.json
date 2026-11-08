@@ -1,0 +1,120 @@
+{
+  "created_at": "2026-11-08 12:19:42",
+  "mode": "full",
+  "config": {
+    "chunk_size": 500,
+    "chunk_overlap": 50,
+    "recall_k": 10,
+    "rerank_top_n": 3,
+    "embed_model": "embedding-2",
+    "embed_dim": 1024,
+    "rerank_model": "rerank-pro",
+    "llm_model": "glm-4v-flash",
+    "temperature": 0.3,
+    "kb_name": "notes_v2",
+    "docs_dir": "/data/Projects/GLMModelsDemo/knowledge_base/kb_corpus",
+    "persist_dir": "/data/Projects/GLMModelsDemo/knowledge_base/kb_store"
+  },
+  "index": {
+    "chunks": 457,
+    "doc_count": 31,
+    "corpus_fp": "b80f327504656bec",
+    "load_or_build_seconds": 0.0669
+  },
+  "rows": [
+    {
+      "question": "Kafka 中 ISR 是什么？Leader 和 Follower 是如何工作的？",
+      "rewrite": 0.7474,
+      "query_embed": 0.3078,
+      "vector_scan": 0.0286,
+      "rerank": 0.5853,
+      "generate": 3.1743,
+      "answer_chars": 342,
+      "total": 4.8434
+    },
+    {
+      "question": "ZooKeeper 三节点集群配置了哪些关键参数？集群配置文件中 server 条目怎么写？",
+      "rewrite": 0.6089,
+      "query_embed": 0.3127,
+      "vector_scan": 0.0267,
+      "rerank": 0.3828,
+      "generate": 7.1705,
+      "answer_chars": 790,
+      "total": 8.5016
+    },
+    {
+      "question": "Hadoop 的 NameNode 和 DataNode 各自负责什么？",
+      "rewrite": 0.5291,
+      "query_embed": 0.2634,
+      "vector_scan": 0.0279,
+      "rerank": 0.3033,
+      "generate": 2.6292,
+      "answer_chars": 324,
+      "total": 3.7529
+    },
+    {
+      "question": "Flink 集群包含哪些核心组件？各自职责是什么？",
+      "rewrite": 0.5156,
+      "query_embed": 0.2371,
+      "vector_scan": 0.0275,
+      "rerank": 0.4818,
+      "generate": 2.0485,
+      "answer_chars": 246,
+      "total": 3.3105
+    },
+    {
+      "question": "Spark SQL 的 DataFrame 是什么？相比 RDD 有什么优势？",
+      "rewrite": 0.8198,
+      "query_embed": 0.3071,
+      "vector_scan": 0.0276,
+      "rerank": 0.3816,
+      "generate": 4.0954,
+      "answer_chars": 420,
+      "total": 5.6315
+    }
+  ],
+  "summary": {
+    "rewrite": {
+      "n": 5,
+      "min": 0.5156,
+      "p50": 0.6089,
+      "max": 0.8198,
+      "mean": 0.6442
+    },
+    "query_embed": {
+      "n": 5,
+      "min": 0.2371,
+      "p50": 0.3071,
+      "max": 0.3127,
+      "mean": 0.2856
+    },
+    "vector_scan": {
+      "n": 5,
+      "min": 0.0267,
+      "p50": 0.0276,
+      "max": 0.0286,
+      "mean": 0.0277
+    },
+    "rerank": {
+      "n": 5,
+      "min": 0.3033,
+      "p50": 0.3828,
+      "max": 0.5853,
+      "mean": 0.427
+    },
+    "generate": {
+      "n": 5,
+      "min": 2.0485,
+      "p50": 3.1743,
+      "max": 7.1705,
+      "mean": 3.8236
+    },
+    "total": {
+      "n": 5,
+      "min": 3.3105,
+      "p50": 4.8434,
+      "max": 8.5016,
+      "mean": 5.208
+    }
+  }
+}
