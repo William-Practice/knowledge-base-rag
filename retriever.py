@@ -6,12 +6,15 @@ retriever.py — ③ 检索层：向量召回 Top10 → Rerank 精排 Top3
 import json
 import urllib.request
 
-from config import *
+from config import *                      # RERANK_URL / LLM_API_KEY / 旧常量名
+from config import DEFAULT_CONFIG, RAGConfig
 from embedding_utils import embed, search_with_vectors
 
 
-def _rerank(query: str, chunks: list[dict], top_n: int = RERANK_TOP_N) -> list[dict]:
+def _rerank(query: str, chunks: list[dict], top_n: int | None = None,
+            cfg: RAGConfig = DEFAULT_CONFIG) -> list[dict]:
     """调智谱 Rerank API：按 query 相关性给 chunks 精排，返回 top_n"""
+    top_n = cfg.rerank_top_n if top_n is None else top_n
     if not chunks:
         return []
     if len(chunks) <= top_n:
@@ -19,7 +22,7 @@ def _rerank(query: str, chunks: list[dict], top_n: int = RERANK_TOP_N) -> list[d
 
     documents = [c["text"] for c in chunks]
     body = json.dumps({
-        "model": RERANK_MODEL,
+        "model": cfg.rerank_model,
         "query": query,
         "documents": documents,
         "top_n": top_n,
@@ -50,13 +53,16 @@ def _rerank(query: str, chunks: list[dict], top_n: int = RERANK_TOP_N) -> list[d
     return reranked[:top_n]
 
 
-def search(query: str, kb: dict, recall_k: int = RECALL_K,
-           rerank_top_n: int = RERANK_TOP_N) -> list[dict]:
+def search(query: str, kb: dict, recall_k: int | None = None,
+           rerank_top_n: int | None = None,
+           cfg: RAGConfig = DEFAULT_CONFIG) -> list[dict]:
     """
     检索主流程：向量召回 TopK → Rerank 精排 TopN
     :param kb: build_index() 返回的 {"chunks": [...]}
     :return: [{"chunk_id", "source", "text", "vec", "score"(召回分), "rerank_score"}, ...]
     """
+    recall_k = cfg.recall_k if recall_k is None else recall_k
+    rerank_top_n = cfg.rerank_top_n if rerank_top_n is None else rerank_top_n
     chunks = kb.get("chunks", [])
     if not chunks:
         return []
