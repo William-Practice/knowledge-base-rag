@@ -1,0 +1,301 @@
+{
+  "_comment": "试点批次 20 题。gold = 章节限定 + 锚点共现（eval/resolve_gold.py 解析），不靠人眼在 457 块里挑。",
+  "_schema": {
+    "section": "必须出现在 chunk.section 里的字符串（来自 loader 的元信息）",
+    "anchors": "必须出现在 chunk.text 里的字符串，全部命中",
+    "source": "可选：限定来源文件名的子串",
+    "gold": "由 resolve_gold.py 写入的 [chunk_id, ...]（可多个，命中任一即算召回）"
+  },
+  "_findings": [
+    "『Kafka 的 LEO 和 HW 是什么』在这套语料里查不到 —— 全库无 LEO / HW（High Watermark）定义。",
+    "原 eval_set.json 的示例问题正是这一条，说明旧 demo 的展示答案是模型自己补的，不是检索来的。"
+  ],
+  "questions": [
+    {
+      "id": 1,
+      "category": "term",
+      "question": "Kafka 的 ISR 是什么？Leader 和 Follower 是怎么协同的？",
+      "section": "二、副本（Replication）",
+      "anchors": [
+        "ISR"
+      ],
+      "source": "L19",
+      "gold": [
+        230
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 2,
+      "category": "term",
+      "question": "消费组的偏移量怎么重置到最早或者最新？",
+      "section": "2.3 重置消费者组偏移量",
+      "anchors": [
+        "--to-earliest"
+      ],
+      "source": "L17",
+      "gold": [
+        221
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 3,
+      "category": "term",
+      "question": "Rebalance 一般是什么引起的，怎么减少它？",
+      "section": "Rebalance（再均衡）",
+      "anchors": [
+        "Rebalance"
+      ],
+      "source": "L20",
+      "gold": [
+        241
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 4,
+      "category": "term",
+      "question": "offset 的几种提交方式各自有什么优缺点？",
+      "section": "四、Offset 提交策略对照表",
+      "anchors": [
+        "commitSync"
+      ],
+      "source": "L21",
+      "gold": [
+        259
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 5,
+      "category": "term",
+      "question": "Flink 的 Watermark 到底解决什么问题？",
+      "section": "为什么需要 Watermark",
+      "anchors": [
+        "Watermark"
+      ],
+      "source": "L39",
+      "gold": [
+        61
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 6,
+      "category": "term",
+      "question": "Flink 的算子链是什么，怎么手动断开？",
+      "section": "四、算子链（Operator Chains）",
+      "anchors": [
+        "算子链"
+      ],
+      "source": "L36",
+      "gold": [
+        29
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 7,
+      "category": "term",
+      "question": "Flink 的并行度有哪几层可以设置，优先级怎么排？",
+      "section": "二、4 层并行度设置（优先级从高到低）",
+      "anchors": [
+        "并行度"
+      ],
+      "source": "L36",
+      "gold": [
+        26
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 8,
+      "category": "term",
+      "question": "Checkpoint 和 Savepoint 有什么区别？",
+      "section": "四、Savepoint（保存点）",
+      "anchors": [
+        "Checkpoint",
+        "Savepoint"
+      ],
+      "source": "L37",
+      "gold": [
+        45
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 9,
+      "category": "term",
+      "question": "Flink SQL 里的动态表是什么意思？",
+      "section": "二、动态表（Dynamic Table）",
+      "anchors": [
+        "动态表"
+      ],
+      "source": "L41",
+      "gold": [
+        78
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 10,
+      "category": "term",
+      "question": "Spark 的 DataFrame 和 RDD 有什么区别？",
+      "section": "七、相关命令速查",
+      "anchors": [
+        "DataFrame",
+        "RDD"
+      ],
+      "source": "L30",
+      "gold": [
+        422
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 11,
+      "category": "term",
+      "question": "Spark 的几种部署模式有什么差别，client 和 cluster 怎么选？",
+      "section": "五、部署模式对比",
+      "anchors": [
+        "部署模式"
+      ],
+      "source": "L29",
+      "gold": [
+        413
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 12,
+      "category": "term",
+      "question": "mapred-site.xml 里怎么让 MapReduce 跑在 YARN 上？",
+      "section": "关键配置文件清单",
+      "anchors": [
+        "mapreduce.framework.name"
+      ],
+      "source": "L01-04",
+      "gold": [
+        107
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 13,
+      "category": "term",
+      "question": "ZooKeeper 集群的 server.N 条目怎么写，myid 怎么和节点对应？",
+      "section": "二、配置 ZooKeeper 集群",
+      "anchors": [
+        "myid"
+      ],
+      "source": "zookeeper",
+      "gold": [
+        453
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 14,
+      "category": "term",
+      "question": "LoRA 微调的三个关键参数是什么，各自影响什么？",
+      "section": "LoRA 的三个关键参数",
+      "anchors": [
+        "lora_rank"
+      ],
+      "source": "D23",
+      "gold": [
+        374
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 15,
+      "category": "term",
+      "question": "Function Calling 和 Agent 到底有什么区别？",
+      "section": "和 Function Calling 的区别",
+      "anchors": [
+        "Function Calling"
+      ],
+      "source": "D17",
+      "gold": [
+        344
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 16,
+      "category": "multi",
+      "question": "offset 除了存 Kafka 自己的 __consumer_offsets，还能存到 Redis 吗？那套怎么做的？",
+      "section": "四、关键点说明",
+      "anchors": [
+        "Redis"
+      ],
+      "source": "Redis偏移量",
+      "gold": [
+        186,
+        187
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 17,
+      "category": "multi",
+      "question": "Flink 集群部署时配置文件在哪、要改哪些项？",
+      "section": "配置（/opt/flink/conf/flink-conf.yaml）",
+      "anchors": [
+        "flink-conf.yaml"
+      ],
+      "source": "L33",
+      "gold": [
+        3
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 18,
+      "category": "multi",
+      "question": "Hadoop 三台机器之间配 SSH 免密登录，具体怎么操作？",
+      "section": "SSH免密登录，虚拟机之间如何连接？",
+      "anchors": [
+        "免密"
+      ],
+      "source": "L01-04",
+      "gold": [
+        117
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 19,
+      "category": "colloquial",
+      "question": "我 kafka 起不来了，日志目录里有个名字怪怪的文件夹，那个报错是啥意思",
+      "section": "坑 1：日志目录里出现非 `topic-partition` 名字",
+      "anchors": [
+        "日志目录"
+      ],
+      "source": "运维排查",
+      "gold": [
+        191,
+        192
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 20,
+      "category": "colloquial",
+      "question": "flink 提交上去以后并行度好像没生效，怎么查",
+      "section": "六、如何查看并行度",
+      "anchors": [
+        "并行度"
+      ],
+      "source": "L36",
+      "gold": [
+        31
+      ],
+      "gold_status": "ok"
+    }
+  ],
+  "_resolved_at": "2026-11-08 12:47:08",
+  "_corpus_fp": "b80f327504656bec"
+}
