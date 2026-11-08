@@ -21,7 +21,8 @@
       ],
       "source": "L19",
       "gold": [
-        230
+        263,
+        264
       ],
       "gold_status": "ok"
     },
@@ -35,7 +36,8 @@
       ],
       "source": "L17",
       "gold": [
-        221
+        253,
+        254
       ],
       "gold_status": "ok"
     },
@@ -49,7 +51,7 @@
       ],
       "source": "L20",
       "gold": [
-        241
+        276
       ],
       "gold_status": "ok"
     },
@@ -63,7 +65,7 @@
       ],
       "source": "L21",
       "gold": [
-        259
+        295
       ],
       "gold_status": "ok"
     },
@@ -77,7 +79,7 @@
       ],
       "source": "L39",
       "gold": [
-        61
+        70
       ],
       "gold_status": "ok"
     },
@@ -91,7 +93,7 @@
       ],
       "source": "L36",
       "gold": [
-        29
+        35
       ],
       "gold_status": "ok"
     },
@@ -105,7 +107,7 @@
       ],
       "source": "L36",
       "gold": [
-        26
+        30
       ],
       "gold_status": "ok"
     },
@@ -120,7 +122,7 @@
       ],
       "source": "L37",
       "gold": [
-        45
+        55
       ],
       "gold_status": "ok"
     },
@@ -134,7 +136,7 @@
       ],
       "source": "L41",
       "gold": [
-        78
+        89
       ],
       "gold_status": "ok"
     },
@@ -142,14 +144,14 @@
       "id": 10,
       "category": "term",
       "question": "Spark 的 DataFrame 和 RDD 有什么区别？",
-      "section": "七、相关命令速查",
+      "section": "八、面试常考题",
       "anchors": [
         "DataFrame",
         "RDD"
       ],
       "source": "L30",
       "gold": [
-        422
+        489
       ],
       "gold_status": "ok"
     },
@@ -163,7 +165,7 @@
       ],
       "source": "L29",
       "gold": [
-        413
+        477
       ],
       "gold_status": "ok"
     },
@@ -177,7 +179,7 @@
       ],
       "source": "L01-04",
       "gold": [
-        107
+        119
       ],
       "gold_status": "ok"
     },
@@ -191,7 +193,7 @@
       ],
       "source": "zookeeper",
       "gold": [
-        453
+        525
       ],
       "gold_status": "ok"
     },
@@ -205,7 +207,7 @@
       ],
       "source": "D23",
       "gold": [
-        374
+        433
       ],
       "gold_status": "ok"
     },
@@ -219,7 +221,7 @@
       ],
       "source": "D17",
       "gold": [
-        344
+        397
       ],
       "gold_status": "ok"
     },
@@ -233,8 +235,8 @@
       ],
       "source": "Redis偏移量",
       "gold": [
-        186,
-        187
+        212,
+        213
       ],
       "gold_status": "ok"
     },
@@ -262,7 +264,7 @@
       ],
       "source": "L01-04",
       "gold": [
-        117
+        131
       ],
       "gold_status": "ok"
     },
@@ -276,8 +278,7 @@
       ],
       "source": "运维排查",
       "gold": [
-        191,
-        192
+        218
       ],
       "gold_status": "ok"
     },
@@ -291,11 +292,11 @@
       ],
       "source": "L36",
       "gold": [
-        31
+        38
       ],
       "gold_status": "ok"
     }
   ],
-  "_resolved_at": "2026-11-08 12:47:08",
+  "_resolved_at": "2026-11-08 15:13:49",
   "_corpus_fp": "b80f327504656bec"
 }

@@ -53,6 +53,8 @@ class RAGConfig:
     # —— 切分（影响索引）——
     chunk_size: int = 500
     chunk_overlap: int = 50
+    # 遇到 markdown 标题强制收尾，保证一块只属一个小节（见 loader._blocks 注释）
+    heading_aware: bool = True
     # —— 检索（影响索引的只有 embed_*）——
     recall_k: int = 10
     rerank_top_n: int = 3
@@ -78,6 +80,7 @@ class RAGConfig:
         return {
             "chunk_size": self.chunk_size,
             "chunk_overlap": self.chunk_overlap,
+            "heading_aware": self.heading_aware,
             "embed_model": self.embed_model,
             "embed_dim": self.embed_dim,
         }
@@ -135,6 +138,8 @@ def add_config_args(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
     g.add_argument("--config", metavar="JSON", help="配置文件路径，覆盖默认值")
     g.add_argument("--chunk-size", type=int)
     g.add_argument("--chunk-overlap", type=int)
+    g.add_argument("--heading-aware", dest="heading_aware", action="store_true", default=None)
+    g.add_argument("--no-heading-aware", dest="heading_aware", action="store_false")
     g.add_argument("--recall-k", type=int)
     g.add_argument("--rerank-top-n", type=int)
     g.add_argument("--rerank-model")
@@ -153,6 +158,7 @@ def config_from_args(args, base: RAGConfig = DEFAULT_CONFIG) -> RAGConfig:
         cfg = cfg.merged(RAGConfig.from_json(args.config))
     pairs = {
         "chunk_size": "chunk_size", "chunk_overlap": "chunk_overlap",
+        "heading_aware": "heading_aware",
         "recall_k": "recall_k", "rerank_top_n": "rerank_top_n",
         "rerank_model": "rerank_model", "llm_model": "llm_model",
         "temperature": "temperature", "kb_name": "kb_name",

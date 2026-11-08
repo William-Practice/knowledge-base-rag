@@ -32,8 +32,11 @@ def resolve_one(kb_chunks: list[dict], q: dict) -> tuple[list[int], str]:
     anchors = [a.lower() for a in q.get("anchors") or []]
     src = q.get("source") or ""
 
+    def secs(c):
+        return c.get("sections") or ([c["section"]] if c.get("section") else [])
+
     by_section = [c for c in kb_chunks
-                  if sec in (c.get("section") or "")
+                  if any(sec in s for s in secs(c))
                   and (not src or src in c.get("source", ""))]
     if not by_section:
         return [], "no_section_match"

@@ -26,7 +26,7 @@ _HEADING = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
 _BLANK = re.compile(r"\n[ \t]*\n")
 _SENT_END = "。！？；\n.!?;"
 
-STORE_FORMAT = 2
+STORE_FORMAT = 3  # 3: chunk 增加 sections 列表
 
 
 # ── 加载 ────────────────────────────────────────────────
@@ -74,16 +74,34 @@ def corpus_fingerprint(docs: list[dict]) -> str:
 
 # ── 切分 ────────────────────────────────────────────────
 
-def _blocks(text: str) -> list[tuple[int, int]]:
-    """按空行切段，返回去除首尾空白后的字符区间"""
-    spans, pos = [], 0
-    for m in _BLANK.finditer(text):
-        spans.append((pos, m.start()))
-        pos = m.end()
-    spans.append((pos, len(text)))
+_HEADING_LINE = re.compile(r"^#{1,6}\s+\S", re.MULTILINE)
 
+
+def _blocks(text: str) -> list[tuple[int, int]]:
+    """
+    切段，返回去除首尾空白后的字符区间。
+
+    断点有两类：
+      1. 空行之后
+      2. **每个 markdown 标题行的行首**
+    第 2 条是关键：笔记里常见「上一节代码块还没结束，下一节标题就顶上来」，
+    只在空行处断的话，标题会落在块中间，# 号对齐的判定永远匹配不到，
+    该块于是被前一节的内容污染（实测：动态表 gold 排第 49）。
+    """
+    breaks = set()
+    pos = 0
+    for line in text.splitlines(keepends=True):
+        if _HEADING_LINE.match(line):
+            breaks.add(pos)
+        pos += len(line)
+    for m in _BLANK.finditer(text):
+        breaks.add(m.end())
+    breaks.add(0)
+
+    marks = sorted(b for b in breaks if 0 <= b <= len(text))
     out = []
-    for s, e in spans:
+    for i, s in enumerate(marks):
+        e = marks[i + 1] if i + 1 < len(marks) else len(text)
         while s < e and text[s].isspace():
             s += 1
         while e > s and text[e - 1].isspace():
@@ -128,7 +146,8 @@ def _overlap_tail(buf: str, overlap: int) -> str:
 
 def chunk_text(text: str,
                chunk_size: int = DEFAULT_CONFIG.chunk_size,
-               chunk_overlap: int = DEFAULT_CONFIG.chunk_overlap) -> list[dict]:
+               chunk_overlap: int = DEFAULT_CONFIG.chunk_overlap,
+               heading_aware: bool = DEFAULT_CONFIG.heading_aware) -> list[dict]:
     """
     切分并保留定位信息。
 
@@ -138,20 +157,24 @@ def chunk_text(text: str,
       offset         [s, e] 主内容整体跨度
       overlap_chars  text 开头有多少字符是重叠前缀（不属于主内容）
       char_len       len(text)
-      section        块起始处所在的最近一级 markdown 标题
+      section        块内**第一个**标题（= 这块从哪个小节开始）
+      sections       块内**所有**标题。heading-aware 下仍会有短小节被合并进大块，
+                     只记一个 section 会让"标题在块里但不在 section 上"，因此两者都存。
     """
     chunks: list[dict] = []
     section = ""
     buf = ""
     spans: list[tuple[int, int]] = []
     carried = 0
-    buf_section = ""
+    buf_sections: list[str] = []
+    # 太短的小节不单独成块，否则会切出一堆只有标题行的碎块
+    min_split = max(80, chunk_size // 4)
 
     def emit():
-        nonlocal buf, spans, carried, buf_section
+        nonlocal buf, spans, carried, buf_sections
         body = buf.strip()
         if not body or not spans:
-            buf, spans, carried = "", [], 0
+            buf, spans, carried, buf_sections = "", [], 0, []
             return
         chunks.append({
             "text": body,
@@ -159,30 +182,43 @@ def chunk_text(text: str,
             "offset": [spans[0][0], spans[-1][1]],
             "overlap_chars": min(carried, len(body)),
             "char_len": len(body),
-            "section": buf_section,
+            "section": buf_sections[0] if buf_sections else "",
+            "sections": list(buf_sections),
         })
-        buf, spans, carried = "", [], 0
+        buf, spans, carried, buf_sections = "", [], 0, []
 
     for s, e in _blocks(text):
         seg = text[s:e]
         m = _HEADING.match(seg)
-        if m:
+        is_heading = bool(m)
+        if is_heading:
             section = m.group(2).strip()
+            # heading-aware：遇到标题就把上一节收尾，保证一块只属一个小节。
+            # 这里**不携带 overlap** —— 跨小节重叠正是"污染"的来源。
+            if heading_aware and buf and len(buf.strip()) >= min_split:
+                emit()
+            buf_sections.append(section)
 
         pieces = [(s, e)] if (e - s) <= chunk_size else _split_long(text, s, e, chunk_size)
         for ps, pe in pieces:
             piece = text[ps:pe]
             if not buf:
-                buf, spans, carried, buf_section = piece, [(ps, pe)], 0, section
-            elif len(buf) + 1 + len(piece) <= chunk_size:
+                buf, spans, carried = piece, [(ps, pe)], 0
+                if not buf_sections and section:
+                    buf_sections = [section]
+            elif (len(buf) + 1 + len(piece) <= chunk_size
+                  # 缓冲区太短（常见于"标题行单独成块"）时宁可轻微超长，
+                  # 也不要切出 10 字符的碎块 —— 碎块向量没有信息量
+                  or len(buf.strip()) < min_split):
                 buf = buf + "\n" + piece
                 spans.append((ps, pe))
             else:
                 tail = _overlap_tail(buf, chunk_overlap)   # 必须先取，emit() 会清空 buf
                 emit()
                 buf = piece
-                spans, buf_section = [(ps, pe)], section
-                carried = 0
+                spans, carried, buf_sections = [(ps, pe)], 0, []
+                if section:
+                    buf_sections = [section]
                 if tail:
                     buf = tail + "\n" + piece
                     carried = len(tail) + 1
@@ -250,7 +286,8 @@ def build_index(cfg: RAGConfig = DEFAULT_CONFIG, force: bool = False,
     # ── 切分 ──
     chunks: list[dict] = []
     for doc in docs:
-        for part in chunk_text(doc["text"], cfg.chunk_size, cfg.chunk_overlap):
+        for part in chunk_text(doc["text"], cfg.chunk_size, cfg.chunk_overlap,
+                               cfg.heading_aware):
             part["chunk_id"] = len(chunks) + 1
             part["source"] = doc["source"]
             chunks.append(part)
