@@ -27,10 +27,11 @@ from config import RAGConfig  # noqa: E402
 from loader import build_index  # noqa: E402
 
 
-def resolve_one(kb_chunks: list[dict], q: dict) -> tuple[list[int], str]:
-    sec = q.get("section") or ""
-    anchors = [a.lower() for a in q.get("anchors") or []]
-    src = q.get("source") or ""
+def _resolve_spec(kb_chunks: list[dict], spec: dict) -> tuple[list[int], str]:
+    """单个目标：章节 + 锚点 + 可选来源"""
+    sec = spec.get("section") or ""
+    anchors = [a.lower() for a in spec.get("anchors") or []]
+    src = spec.get("source") or ""
 
     def secs(c):
         return c.get("sections") or ([c["section"]] if c.get("section") else [])
@@ -46,12 +47,37 @@ def resolve_one(kb_chunks: list[dict], q: dict) -> tuple[list[int], str]:
     if hit_all:
         return [c["chunk_id"] for c in hit_all], "ok" if len(hit_all) <= 3 else "wide"
 
-    # 退化：只命中部分锚点，报出来让人改
     partial = [c for c in by_section
                if any(a in c["text"].lower() for a in anchors)]
     if partial:
         return [c["chunk_id"] for c in partial], "partial"
     return [], "no_anchor_hit"
+
+
+def resolve_one(kb_chunks: list[dict], q: dict) -> tuple[list[int], str]:
+    """
+    支持两种写法：
+      单目标   section / anchors / source
+      多目标   targets: [{section, anchors, source}, ...]   （跨文档题：两个证据都要找到）
+    多目标时 gold = 各目标 chunk 的并集，另存 groups 以便评测"是否全部命中"。
+    """
+    specs = q.get("targets")
+    if not specs:
+        ids, st = _resolve_spec(kb_chunks, q)
+        return ids, st
+
+    groups, statuses = [], []
+    for spec in specs:
+        ids, st = _resolve_spec(kb_chunks, spec)
+        groups.append(ids)
+        statuses.append(st)
+    q["_gold_groups"] = groups
+    gold = sorted({i for g in groups for i in g})
+    if all(s in ("ok", "wide") for s in statuses):
+        return gold, "ok" if all(len(g) <= 3 for g in groups) else "wide"
+    if any(s in ("partial", "ok", "wide") for s in statuses):
+        return gold, "partial"
+    return gold, "no_anchor_hit"
 
 
 def main():

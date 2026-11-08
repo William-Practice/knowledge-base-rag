@@ -111,6 +111,10 @@ def main():
 
         rec_ids = [c["chunk_id"] for c in recalled]
         fin_ids = [c["chunk_id"] for c in final]
+        # 跨文档题：gold 由多个目标组成，额外统计"每个目标都被命中"（更严）
+        groups = q.get("_gold_groups") or []
+        all_targets = (all(any(cid in set(g) for cid in fin_ids[:top_n]) for g in groups)
+                       if len(groups) > 1 else None)
         hit10 = any(cid in gold for cid in rec_ids[:10])
         hit_n = any(cid in gold for cid in fin_ids[:top_n])
         rr = 0.0
@@ -123,6 +127,8 @@ def main():
             "id": q["id"], "category": q["category"], "question": q["question"],
             "n_gold": len(gold), "hit@10": int(hit10), "hit@topn": int(hit_n),
             "rr": round(rr, 4), "rerank_applied": int(applied), "n_lost_terms": len(lost),
+            "all_targets": ("" if all_targets is None else int(all_targets)),
+            "n_targets": len(groups),
             "gold_ids": "|".join(map(str, sorted(gold))),
             "top_ids": "|".join(map(str, fin_ids[:top_n])),
         })
@@ -144,6 +150,10 @@ def main():
         print(f"  {cat:<12} n={len(rs):<3} hit@10={sum(x['hit@10'] for x in rs)/len(rs):.3f}"
               f"  hit@{top_n}={sum(x['hit@topn'] for x in rs)/len(rs):.3f}"
               f"  MRR={sum(x['rr'] for x in rs)/len(rs):.3f}")
+    multi_rows = [r for r in rows if r["n_targets"] > 1]
+    if multi_rows:
+        cov = sum(r["all_targets"] for r in multi_rows) / len(multi_rows)
+        print(f"  跨文档题全目标覆盖：{cov:.3f}（{len(multi_rows)} 题，n_targets>1）")
     lost_total = sum(r["n_lost_terms"] for r in rows)
     print(f"  改写丢失受保护词：{lost_total} 次")
     if not args.no_rerank:

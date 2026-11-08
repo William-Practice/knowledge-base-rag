@@ -295,8 +295,918 @@
         38
       ],
       "gold_status": "ok"
+    },
+    {
+      "id": 21,
+      "category": "term",
+      "question": "Task Slot 是什么？和并行度是什么关系？",
+      "section": "Slot 和并行度的关系",
+      "anchors": [
+        "Slot"
+      ],
+      "source": "L36",
+      "gold": [
+        34
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 22,
+      "category": "term",
+      "question": "Flink 的窗口有哪几种类型？",
+      "section": "窗口类型",
+      "anchors": [
+        "窗口"
+      ],
+      "source": "L39",
+      "gold": [
+        66,
+        67
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 23,
+      "category": "term",
+      "question": "Kafka 的分区数应该怎么估算？",
+      "section": "经验公式",
+      "anchors": [
+        "分区数"
+      ],
+      "source": "L22",
+      "gold": [
+        312
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 24,
+      "category": "term",
+      "question": "Hive 的内部表和外部表有什么区别？",
+      "section": "外部表（External Table）",
+      "anchors": [
+        "external"
+      ],
+      "source": "L05-07",
+      "gold": [
+        172
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 25,
+      "category": "term",
+      "question": "Sqoop 导入 Hive 时为什么表结构必须匹配？",
+      "section": "表结构必须匹配",
+      "anchors": [
+        "表结构"
+      ],
+      "source": "Sqoop",
+      "gold": [
+        196
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 26,
+      "category": "multi",
+      "question": "Flink 消费 Kafka 的起始位置怎么设？Kafka 自己又是怎么存 offset 的？",
+      "targets": [
+        {
+          "section": "消费起始位置",
+          "anchors": [
+            "起始"
+          ],
+          "source": "L37"
+        },
+        {
+          "section": "四、Offset 提交策略对照表",
+          "anchors": [
+            "commitSync"
+          ],
+          "source": "L21"
+        }
+      ],
+      "_gold_groups": [
+        [
+          48
+        ],
+        [
+          295
+        ]
+      ],
+      "gold": [
+        48,
+        295
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 27,
+      "category": "multi",
+      "question": "Spark 读 MySQL 和读 Hive，配置上分别要准备什么？",
+      "targets": [
+        {
+          "section": "1.2 Spark Shell 中读取 MySQL",
+          "anchors": [
+            "mysql"
+          ],
+          "source": "L31"
+        },
+        {
+          "section": "2.1 配置",
+          "anchors": [
+            "hive"
+          ],
+          "source": "L31"
+        }
+      ],
+      "_gold_groups": [
+        [
+          491
+        ],
+        [
+          495
+        ]
+      ],
+      "gold": [
+        491,
+        495
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 28,
+      "category": "multi",
+      "question": "Hadoop 集群要改哪几个 xml，ZooKeeper 集群要改哪个文件？",
+      "targets": [
+        {
+          "section": "关键配置文件清单",
+          "anchors": [
+            "hdfs-site"
+          ],
+          "source": "L01-04"
+        },
+        {
+          "section": "二、配置 ZooKeeper 集群",
+          "anchors": [
+            "zoo.cfg"
+          ],
+          "source": "zookeeper"
+        }
+      ],
+      "_gold_groups": [
+        [
+          119
+        ],
+        [
+          524,
+          525
+        ]
+      ],
+      "gold": [
+        119,
+        524,
+        525
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 29,
+      "category": "multi",
+      "question": "Flink 和 Spark 各自有哪几种部署模式？",
+      "targets": [
+        {
+          "section": "五、部署模式对比",
+          "anchors": [
+            "部署模式"
+          ],
+          "source": "L33"
+        },
+        {
+          "section": "五、部署模式对比",
+          "anchors": [
+            "部署模式"
+          ],
+          "source": "L29"
+        }
+      ],
+      "_gold_groups": [
+        [
+          9
+        ],
+        [
+          477
+        ]
+      ],
+      "gold": [
+        9,
+        477
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 30,
+      "category": "multi",
+      "question": "Kafka 的 Lag 怎么看？它和 Rebalance 是什么关系？",
+      "targets": [
+        {
+          "section": "查看 Lag",
+          "anchors": [
+            "lag"
+          ],
+          "source": "L20"
+        },
+        {
+          "section": "Rebalance（再均衡）",
+          "anchors": [
+            "Rebalance"
+          ],
+          "source": "L20"
+        }
+      ],
+      "_gold_groups": [
+        [
+          272
+        ],
+        [
+          276
+        ]
+      ],
+      "gold": [
+        272,
+        276
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 31,
+      "category": "multi",
+      "question": "Hive 的元数据存在 MySQL，Sqoop 也要连 MySQL，两处连接配置分别在哪？",
+      "targets": [
+        {
+          "section": "创建 `hive-site.xml`",
+          "anchors": [
+            "jdbc"
+          ],
+          "source": "L05-07"
+        },
+        {
+          "section": "二、MySQL 侧",
+          "anchors": [
+            "mysql"
+          ],
+          "source": "Sqoop"
+        }
+      ],
+      "_gold_groups": [
+        [
+          164
+        ],
+        [
+          186
+        ]
+      ],
+      "gold": [
+        164,
+        186
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 32,
+      "category": "multi",
+      "question": "Flink SQL 和 Spark SQL 分别怎么写 MySQL 表？",
+      "targets": [
+        {
+          "section": "创建 MySQL 表",
+          "anchors": [
+            "mysql"
+          ],
+          "source": "L41"
+        },
+        {
+          "section": "1.4 结果写回 MySQL",
+          "anchors": [
+            "mysql"
+          ],
+          "source": "L31"
+        }
+      ],
+      "_gold_groups": [
+        [
+          94
+        ],
+        [
+          494
+        ]
+      ],
+      "gold": [
+        94,
+        494
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 33,
+      "category": "multi",
+      "question": "Kafka 自定义分区器怎么写？默认分区策略又是什么？",
+      "targets": [
+        {
+          "section": "3.2 MyPartitioner.java",
+          "anchors": [
+            "Partitioner"
+          ],
+          "source": "T16"
+        },
+        {
+          "section": "3.6 自定义分区器（Java）",
+          "anchors": [
+            "分区"
+          ],
+          "source": "L16"
+        }
+      ],
+      "_gold_groups": [
+        [
+          336,
+          337
+        ],
+        [
+          237
+        ]
+      ],
+      "gold": [
+        237,
+        336,
+        337
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 34,
+      "category": "multi",
+      "question": "Flink 和 Spark 的 checkpoint 分别解决什么问题？",
+      "targets": [
+        {
+          "section": "三、Checkpoint（检查点）",
+          "anchors": [
+            "Checkpoint"
+          ],
+          "source": "L37"
+        },
+        {
+          "section": "八、面试常考题",
+          "anchors": [
+            "Exactly-Once"
+          ],
+          "source": "L32"
+        }
+      ],
+      "_gold_groups": [
+        [
+          52
+        ],
+        [
+          519
+        ]
+      ],
+      "gold": [
+        52,
+        519
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 35,
+      "category": "multi",
+      "question": "ZooKeeper 分发配置和 Hadoop 分发配置，步骤上有共同点吗？",
+      "targets": [
+        {
+          "section": "三、分发 ZooKeeper 到其他节点",
+          "anchors": [
+            "scp"
+          ],
+          "source": "zookeeper"
+        },
+        {
+          "section": "分发配置",
+          "anchors": [
+            "scp"
+          ],
+          "source": "L01-04"
+        }
+      ],
+      "_gold_groups": [
+        [
+          527
+        ],
+        [
+          139
+        ]
+      ],
+      "gold": [
+        139,
+        527
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 36,
+      "category": "multi",
+      "question": "Kafka 的 lag 既能命令行看也能代码里算，两种分别怎么做？",
+      "targets": [
+        {
+          "section": "查看 Lag",
+          "anchors": [
+            "lag"
+          ],
+          "source": "L20"
+        },
+        {
+          "section": "代码中计算 Lag",
+          "anchors": [
+            "lag"
+          ],
+          "source": "L20"
+        }
+      ],
+      "_gold_groups": [
+        [
+          272
+        ],
+        [
+          273
+        ]
+      ],
+      "gold": [
+        272,
+        273
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 37,
+      "category": "multi",
+      "question": "Flink 的并行度建议和 Kafka 的分区数建议之间有对应关系吗？",
+      "targets": [
+        {
+          "section": "五、并行度设置建议",
+          "anchors": [
+            "并行度"
+          ],
+          "source": "L36"
+        },
+        {
+          "section": "经验公式",
+          "anchors": [
+            "分区数"
+          ],
+          "source": "L22"
+        }
+      ],
+      "_gold_groups": [
+        [
+          37
+        ],
+        [
+          312
+        ]
+      ],
+      "gold": [
+        37,
+        312
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 38,
+      "category": "multi",
+      "question": "RAG 里的文本切分策略和混合检索，笔记里怎么讲的？",
+      "targets": [
+        {
+          "section": "2. 文本切分三种策略",
+          "anchors": [
+            "切分"
+          ],
+          "source": "D01"
+        },
+        {
+          "section": "混合检索（BM25 + 向量）",
+          "anchors": [
+            "BM25"
+          ],
+          "source": "D01"
+        }
+      ],
+      "_gold_groups": [
+        [
+          385
+        ],
+        [
+          387
+        ]
+      ],
+      "gold": [
+        385,
+        387
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 39,
+      "category": "multi",
+      "question": "Agent 和 Function Calling 的区别是什么？MCP 又想解决什么问题？",
+      "targets": [
+        {
+          "section": "和 Function Calling 的区别",
+          "anchors": [
+            "Function Calling"
+          ],
+          "source": "D17"
+        },
+        {
+          "section": "五、MCP 协议",
+          "anchors": [
+            "MCP"
+          ],
+          "source": "D17"
+        }
+      ],
+      "_gold_groups": [
+        [
+          397
+        ],
+        [
+          412
+        ]
+      ],
+      "gold": [
+        397,
+        412
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 40,
+      "category": "multi",
+      "question": "Kafka 日志目录出问题和 coordinator 出问题，现象和排查分别是什么？",
+      "targets": [
+        {
+          "section": "坑 1：日志目录里出现非",
+          "anchors": [
+            "日志目录"
+          ],
+          "source": "运维排查"
+        },
+        {
+          "section": "坑 3：消费组命令全部超时",
+          "anchors": [
+            "coordinator"
+          ],
+          "source": "运维排查"
+        }
+      ],
+      "_gold_groups": [
+        [
+          218
+        ],
+        [
+          222,
+          223
+        ]
+      ],
+      "gold": [
+        218,
+        222,
+        223
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 41,
+      "category": "multi",
+      "question": "Spark 结构化流的输出模式和 Flink SQL 的 result-mode 有什么对应关系？",
+      "targets": [
+        {
+          "section": "四、输出模式",
+          "anchors": [
+            "输出模式"
+          ],
+          "source": "L32"
+        },
+        {
+          "section": "SQL Client 内常用命令",
+          "anchors": [
+            "result-mode"
+          ],
+          "source": "L41"
+        }
+      ],
+      "_gold_groups": [
+        [
+          511
+        ],
+        [
+          100
+        ]
+      ],
+      "gold": [
+        100,
+        511
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 42,
+      "category": "multi",
+      "question": "Hadoop 三台机器的 SSH 免密和 ZooKeeper 的 myid 分发，先后顺序应该怎样？",
+      "targets": [
+        {
+          "section": "SSH免密登录",
+          "anchors": [
+            "ssh-keygen"
+          ],
+          "source": "L01-04"
+        },
+        {
+          "section": "二、配置 ZooKeeper 集群",
+          "anchors": [
+            "myid"
+          ],
+          "source": "zookeeper"
+        }
+      ],
+      "_gold_groups": [
+        [
+          131
+        ],
+        [
+          525
+        ]
+      ],
+      "gold": [
+        131,
+        525
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 43,
+      "category": "colloquial",
+      "question": "我 sqoop 导数据报 class not found，驱动到底该放哪",
+      "section": "MySQL 驱动",
+      "anchors": [
+        "驱动"
+      ],
+      "source": "Sqoop",
+      "gold": [
+        189
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 44,
+      "category": "colloquial",
+      "question": "hive 表建好了，select 出来是空的",
+      "section": "HDFS 验证",
+      "anchors": [
+        "hdfs"
+      ],
+      "source": "L05-07",
+      "gold": [
+        173
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 45,
+      "category": "colloquial",
+      "question": "我 kafka 消费组命令全都卡住不动，最后报个 2147483646",
+      "section": "坑 3：消费组命令全部超时",
+      "anchors": [
+        "2147483646"
+      ],
+      "source": "运维排查",
+      "gold": [
+        222
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 46,
+      "category": "colloquial",
+      "question": "flink 作业提交上去了但一直接不到数据",
+      "section": "消费起始位置",
+      "anchors": [
+        "earliest"
+      ],
+      "source": "L37",
+      "gold": [
+        48
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 47,
+      "category": "colloquial",
+      "question": "spark 提交到 yarn 就卡住不动了",
+      "section": "spark-submit 参数详解",
+      "anchors": [
+        "yarn"
+      ],
+      "source": "L29",
+      "gold": [
+        473
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 48,
+      "category": "colloquial",
+      "question": "我把 kafka 分区数调多了反而更慢，是不是有上限",
+      "section": "分区数不是越多越好",
+      "anchors": [
+        "分区数"
+      ],
+      "source": "L22",
+      "gold": [
+        311
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 49,
+      "category": "colloquial",
+      "question": "flink sql 往 mysql 写数据一直连不上",
+      "section": "创建 MySQL 表",
+      "anchors": [
+        "mysql"
+      ],
+      "source": "L41",
+      "gold": [
+        94
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 50,
+      "category": "colloquial",
+      "question": "zookeeper 集群起不来，是不是 myid 弄错了",
+      "section": "六、常见问题及解决",
+      "anchors": [
+        "myid"
+      ],
+      "source": "zookeeper",
+      "gold": [
+        531
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 51,
+      "category": "colloquial",
+      "question": "ollama 加载我微调的模型报错",
+      "section": "Ollama 0.34 的两个新限制",
+      "anchors": [
+        "Ollama"
+      ],
+      "source": "D23",
+      "gold": [
+        449,
+        450
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 52,
+      "category": "colloquial",
+      "question": "lora 训练 loss 一直在 2 上下不动，是不是白训了",
+      "section": "loss 应该从",
+      "anchors": [
+        "loss"
+      ],
+      "source": "D23",
+      "gold": [
+        447
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 53,
+      "category": "colloquial",
+      "question": "检索出来的东西完全不相关，是不是切分切坏了",
+      "section": "2. 文本切分三种策略",
+      "anchors": [
+        "切分"
+      ],
+      "source": "D01",
+      "gold": [
+        385
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 54,
+      "category": "colloquial",
+      "question": "我把 flink 并行度调大了反而更慢",
+      "section": "8.2 实测",
+      "anchors": [
+        "并行度"
+      ],
+      "source": "L36",
+      "gold": [
+        42
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 55,
+      "category": "colloquial",
+      "question": "kafka 重启之后消费位置跑到最前面去了",
+      "section": "2.3 重置消费者组偏移量",
+      "anchors": [
+        "earliest"
+      ],
+      "source": "L17",
+      "gold": [
+        253,
+        254
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 56,
+      "category": "colloquial",
+      "question": "spark 读 hive 报 metastore 连不上",
+      "section": "2.1 配置",
+      "anchors": [
+        "hive-site.xml"
+      ],
+      "source": "L31",
+      "gold": [
+        495
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 57,
+      "category": "colloquial",
+      "question": "hadoop 集群只有主节点起来了，从节点连不上",
+      "section": "测试 Hadoop",
+      "anchors": [
+        "workers"
+      ],
+      "source": "L01-04",
+      "gold": [
+        138
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 58,
+      "category": "colloquial",
+      "question": "我写的 agent 老是不调工具，直接瞎答",
+      "section": "工具设计决定 Agent",
+      "anchors": [
+        "工具"
+      ],
+      "source": "D17",
+      "gold": [
+        404
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 59,
+      "category": "colloquial",
+      "question": "mcp server 起不来或者 client 连不上",
+      "section": "两大坑",
+      "anchors": [
+        "MCP"
+      ],
+      "source": "D17",
+      "gold": [
+        415,
+        416
+      ],
+      "gold_status": "ok"
+    },
+    {
+      "id": 60,
+      "category": "colloquial",
+      "question": "flink 的 watermark 我一直没搞懂为啥要有",
+      "section": "为什么需要 Watermark",
+      "anchors": [
+        "Watermark"
+      ],
+      "source": "L39",
+      "gold": [
+        70
+      ],
+      "gold_status": "ok"
     }
   ],
-  "_resolved_at": "2026-11-08 15:13:49",
+  "_resolved_at": "2026-11-08 23:56:30",
   "_corpus_fp": "b80f327504656bec"
 }
