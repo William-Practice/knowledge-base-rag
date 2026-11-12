@@ -152,6 +152,55 @@ def search(query: str, kb: dict, recall_k: int | None = None,
     return _rerank(query, recalled, top_n=rerank_top_n, cfg=cfg)
 
 
+def recall_multi(sub_queries: list[str], kb: dict, recall_k: int | None = None,
+                 rrf_k: int = 60, cfg: RAGConfig = DEFAULT_CONFIG) -> list[dict]:
+    """多子查询召回 + RRF 融合，返回**精排前**的候选列表（供评测计算 hit@k）"""
+    recall_k = cfg.recall_k if recall_k is None else recall_k
+    chunks = kb.get("chunks", [])
+    if not chunks:
+        return []
+
+    lists: list[list[int]] = []
+    for sub in sub_queries:
+        qv = embed(sub)
+        scored = sorted(((i, cosine_similarity(qv, c["vec"]))
+                         for i, c in enumerate(chunks)), key=lambda x: -x[1])
+        lists.append([i for i, _ in scored[:recall_k]])
+
+    if len(lists) == 1:
+        return [dict(chunks[i], score=1.0, recall_rank=r, _idx=i)
+                for r, i in enumerate(lists[0], 1)]
+
+    agg: dict[int, float] = {}
+    for lst in lists:
+        for rank, idx in enumerate(lst, 1):
+            agg[idx] = agg.get(idx, 0.0) + 1.0 / (rrf_k + rank)
+    merged = sorted(agg.items(), key=lambda kv: -kv[1])[:recall_k]
+    return [dict(chunks[i], score=round(s, 6), recall_rank=r, _idx=i)
+            for r, (i, s) in enumerate(merged, 1)]
+
+
+def search_multi(query: str, kb: dict, sub_queries: list[str] | None = None,
+                 recall_k: int | None = None, rerank_top_n: int | None = None,
+                 rrf_k: int = 60, cfg: RAGConfig = DEFAULT_CONFIG) -> list[dict]:
+    """
+    多子查询检索：每个子问题独立召回，用 RRF 融合，再用**原问题**精排。
+
+    为什么用 RRF 而不是加权分数：不同子问题的余弦分数量纲不可比，
+    但名次可比。RRF 只用名次，不需要调权重。
+
+    子问题只有 1 个时，行为与 search() 一致（便于 A/B 对照）。
+    """
+    recall_k = cfg.recall_k if recall_k is None else recall_k
+    top_n = cfg.rerank_top_n if rerank_top_n is None else rerank_top_n
+    chunks = kb.get("chunks", [])
+    if not chunks:
+        return []
+
+    recalled = recall_multi(sub_queries or [query], kb, recall_k=recall_k, rrf_k=rrf_k, cfg=cfg)
+    return _rerank(query, recalled, top_n=top_n, cfg=cfg)
+
+
 if __name__ == "__main__":
     from loader import build_index
     kb = build_index()

@@ -93,6 +93,58 @@ def rewrite_query(question: str, cfg: RAGConfig = DEFAULT_CONFIG,
     raise ValueError(f"未知 rewrite_mode: {mode}（可选 off/plain/protected/strict）")
 
 
+_DECOMP_PROMPT = """把下面这个问题拆成可以独立检索的子问题，最多 {n} 个。
+
+规则：
+1. **只在问题确实包含两个及以上独立信息需求时才拆。** 只问一件事就原样输出一行，
+   不要为了凑数量而拆。
+2. 每个子问题必须**脱离上下文也能读懂**：不得出现"它/这个/该/上面"这类代词，
+   需要指代时把原词补全（例：把"它和 Rebalance 什么关系"写成"Kafka 的 Lag 和 Rebalance 什么关系"）。
+3. 子问题之间不得互相重复，也不要输出"分别是什么"这类要再拆一次的问题。
+4. 必须原样保留技术名词、文件名、配置项、命令（不得翻译、不得改写、不得补全）。
+5. 每行一个子问题，不要编号、不要解释、不要额外文字。
+
+问题：{q}
+子问题："""
+
+
+def decompose_query(question: str, cfg: RAGConfig = DEFAULT_CONFIG,
+                    max_sub: int = 2) -> list[str]:
+    """
+    把复合问题拆成可独立检索的子问题。
+
+    为什么要拆：一个 chunk 装不下两处事实，单轮检索对跨文档题几乎必然漏一半
+    （实测 60 题里跨文档全目标覆盖只有 0.235）。
+
+    安全网：
+      · 受保护词（文件名/命令/参数名）必须在输出里出现，否则退回原问题
+      · 输出超过 max_sub 行只取前 max_sub
+      · 任何异常一律退回 [question] —— 分解失败不能比不分解更差
+    """
+    try:
+        out = _glm_chat(_DECOMP_PROMPT.format(n=max_sub, q=question),
+                        temperature=0.0, cfg=cfg)
+    except Exception:
+        return [question]
+
+    lines = []
+    for raw in out.splitlines():
+        line = raw.strip()
+        line = re.sub(r'^[-*•\d]+[.、)\s]*', '', line).strip()   # 去编号/项目符号
+        if len(line) >= 4:
+            lines.append(line)
+    if not lines:
+        return [question]
+
+    joined = " ".join(lines).lower()
+    lost = [t for t in protected_terms(question) if t.lower() not in joined]
+    if lost:
+        warnings.warn(f"分解丢失受保护词 {lost}，退回原问题", RuntimeWarning, stacklevel=2)
+        return [question]
+
+    return lines[:max_sub]
+
+
 def answer(query: str, docs: list[dict],
            cfg: RAGConfig = DEFAULT_CONFIG) -> tuple[str, list[dict]]:
     """拼 context + 生成答案，返回 (答案, 来源列表)"""

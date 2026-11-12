@@ -46,6 +46,9 @@ def main():
     ap.add_argument("--no-rewrite", action="store_true", help="等价 --rewrite-mode off")
     ap.add_argument("--rewrite-mode", default=None,
                     choices=["off", "plain", "protected", "strict"])
+    ap.add_argument("--decompose", action="store_true",
+                    help="复合问题先拆成子问题，各自召回后用 RRF 融合")
+    ap.add_argument("--max-sub", type=int, default=2, help="最多补几个子问题（原问题总是参与）")
     ap.add_argument("--top-n", type=int, default=None, help="最终保留条数（默认取 cfg.rerank_top_n）")
     ap.add_argument("--tag", default="baseline")
     ap.add_argument("--out-dir", default=os.path.join(_HERE, "results"))
@@ -56,8 +59,8 @@ def main():
     rw_mode = "off" if args.no_rewrite else (args.rewrite_mode or cfg.rewrite_mode)
 
     from loader import build_index
-    from retriever import search, _rerank
-    from generator import rewrite_query, missing_terms
+    from retriever import search, recall_multi, _rerank
+    from generator import rewrite_query, missing_terms, decompose_query
     from embedding_utils import embed, cosine_similarity
 
     kb = build_index(cfg, verbose=False)
@@ -74,7 +77,7 @@ def main():
           f"rewrite={rw_mode}")
     print(f"索引 {len(chunks)} 块 / 题目 {len(qs)} 道\n")
 
-    rows, lat = [], {"rewrite": [], "embed": [], "scan": [], "rerank": [], "total": []}
+    rows, lat = [], {"rewrite": [], "decompose": [], "embed": [], "scan": [], "rerank": [], "total": []}
     for i, q in enumerate(qs, 1):
         gold = set(q["gold"])
         t0 = time.perf_counter()
@@ -84,20 +87,39 @@ def main():
         lost = missing_terms(q["question"], query) if rw_mode != "off" else []
         lat["rewrite"].append(time.perf_counter() - t)
 
-        t = time.perf_counter()
-        qvec = embed(query)
-        lat["embed"].append(time.perf_counter() - t)
+        subs = [query]
+        if args.decompose:
+            t = time.perf_counter()
+            extra = decompose_query(q["question"], cfg=cfg, max_sub=args.max_sub)
+            lat["decompose"].append(time.perf_counter() - t)
+            # 原问题**永远**在检索集里：子问题写坏时由它兜底，
+            # 保证「分解」不会比「不分解」更差（RRF 只是往候选池里加，不会删掉原有命中）
+            seen, merged_q = set(), []
+            for s in [query] + extra:
+                k = s.strip()
+                if k and k not in seen:
+                    seen.add(k); merged_q.append(k)
+            subs = merged_q
 
-        t = time.perf_counter()
-        scored = [(idx, cosine_similarity(qvec, c["vec"])) for idx, c in enumerate(chunks)]
-        scored.sort(key=lambda x: x[1], reverse=True)
-        recalled = []
-        for rank, (idx, s) in enumerate(scored[:cfg.recall_k], 1):
-            ch = dict(chunks[idx])
-            ch["score"] = round(s, 4)
-            ch["recall_rank"] = rank
-            recalled.append(ch)
-        lat["scan"].append(time.perf_counter() - t)
+        if args.decompose:
+            t = time.perf_counter()
+            recalled = recall_multi(subs, kb, recall_k=cfg.recall_k, cfg=cfg)
+            lat["scan"].append(time.perf_counter() - t)
+        else:
+            t = time.perf_counter()
+            qvec = embed(query)
+            lat["embed"].append(time.perf_counter() - t)
+
+            t = time.perf_counter()
+            scored = [(idx, cosine_similarity(qvec, c["vec"])) for idx, c in enumerate(chunks)]
+            scored.sort(key=lambda x: x[1], reverse=True)
+            recalled = []
+            for rank, (idx, s) in enumerate(scored[:cfg.recall_k], 1):
+                ch = dict(chunks[idx])
+                ch["score"] = round(s, 4)
+                ch["recall_rank"] = rank
+                recalled.append(ch)
+            lat["scan"].append(time.perf_counter() - t)
 
         t = time.perf_counter()
         if args.no_rerank:
@@ -129,6 +151,7 @@ def main():
             "rr": round(rr, 4), "rerank_applied": int(applied), "n_lost_terms": len(lost),
             "all_targets": ("" if all_targets is None else int(all_targets)),
             "n_targets": len(groups),
+            "n_sub": len(subs),
             "gold_ids": "|".join(map(str, sorted(gold))),
             "top_ids": "|".join(map(str, fin_ids[:top_n])),
         })
@@ -161,7 +184,9 @@ def main():
         print(f"  rerank 实际生效：{applied}/{n}" + ("  ⚠ 有未生效的题" if applied < n else ""))
 
     print(f"\n{'阶段':<10}{'中位(s)':>9}{'P95(s)':>9}")
-    for k in ("rewrite", "embed", "scan", "rerank", "total"):
+    for k in ("rewrite", "decompose", "embed", "scan", "rerank", "total"):
+        if not lat.get(k):
+            continue
         print(f"{k:<10}{statistics.median(lat[k]):>9.3f}{pct(lat[k], 0.95):>9.3f}")
 
     os.makedirs(args.out_dir, exist_ok=True)
