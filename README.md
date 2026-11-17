@@ -87,8 +87,6 @@
 ```bash
 # 用你自己的 markdown 笔记（保持 <目录>/<子目录>/*.md 结构）
 python tools/make_corpus.py --src ~/notes --dirs kafka flink hadoop spark
-# 或者先用仓库自带的 docs/ 5 篇跑通链路
-python loader.py --docs-dir docs --kb-name smoke
 ```
 
 ---
@@ -292,10 +290,8 @@ generate     3.584 s  67.1%   ← 唯一的大头
 - 参数可注入，消融可脚本化
 - 修掉上面三处会让数字失真的实现缺陷
 
-`docs/` 里 5 篇原始课程笔记保留，作对照用。
-
 顺带发现：旧版 README 的「返回示例」用的是「Kafka 的 LEO 和 HW 是什么」，
-而 `docs/` 与 `kb_corpus/` 里**没有任何 LEO / HW 的定义**（全库 0 处命中）——
+而语料快照里**没有任何 LEO / HW 的定义**（全库 0 处命中）——
 那段示例答案（包括 `"snippet": "LEO 表示日志最后偏移..."`）只能是模型补的，不是检索出来的。
 该示例已从本文档移除；`eval_set.json` 的 5 道题本身都可回答，没有这个问题。
 
@@ -331,7 +327,6 @@ knowledge_base/
 ├─ tests/                  38 项离线断言（零 API 调用）
 ├─ tools/make_corpus.py    从个人笔记生成冻结语料快照
 ├─ kb_corpus.manifest.json 语料清单（路径 + sha256 + 字符数，无内容）
-├─ docs/                   原始 5 篇课程笔记（保留作对照）
 ├─ evaluator_demo.py       旧版评测（只统计答案关键词覆盖，已被 eval/ 取代）
 └─ kb_store/               向量库（自动生成，gitignore）
 ```
